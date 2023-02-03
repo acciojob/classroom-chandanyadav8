@@ -7,7 +7,7 @@ import java.util.*;
 public class StudentRepository {
     Map<String,Student>st=new HashMap<>();
     Map<String,Teacher>tc=new HashMap<>();
-    Map<String,String>pair=new HashMap<>();
+    Map<String, List<String>> pairDb = new HashMap<>();
     public String addStudent(Student student)
     {
         st.put(student.getName(),student);
@@ -20,8 +20,10 @@ public class StudentRepository {
     }
     public String addStudentTeacherPair(String student,String teacher)
     {
-        pair.put(student,teacher);
-        return "Pair added succesfully";
+        List<String> studentList = pairDb.getOrDefault(teacher,new ArrayList<>());
+        studentList.add(student);
+        pairDb.put(teacher,studentList);
+        return "pair added succesfully";
     }
     public Student getStudentByName(String name)
     {
@@ -35,16 +37,10 @@ public class StudentRepository {
             return null;
         return tc.get(name);
     }
-    public List<String> getStudentsByTeacherName(String name)
-    {
-        List<String>ans=new ArrayList<>();
-        for(Map.Entry<String,String> i:pair.entrySet())
-        {
-            if(i.getValue().equals(name))
-                ans.add(i.getKey());
-        }
-        return ans;
-
+    public List<String> getStudentsByTeacherName(String teacher){
+        List<String> studentList = new ArrayList<String>();
+        if(pairDb.containsKey(teacher)) studentList = pairDb.get(teacher);
+        return studentList;
     }
     public List<String> getAllStudents(){
         List<String>ans=new ArrayList<>();
@@ -57,10 +53,14 @@ public class StudentRepository {
     }
     public String deleteTeacherByName(String name)
     {
-        if(!tc.containsKey(name))
-           return  "Teacher is not present";
-        tc.remove(name);
-        return "removed successfully";
+        List<String> studentList = pairDb.get(name);
+        for(String student : studentList){
+            if(st.containsKey(student)){
+                st.remove(student);
+            }
+        }
+        pairDb.remove(name);
+        return "deleted succesfully";
     }
     public String deleteAllTeachers()
     {
@@ -68,3 +68,10 @@ public class StudentRepository {
         return "All teachers deleted successfully";
     }
 }
+
+
+
+
+
+
+
