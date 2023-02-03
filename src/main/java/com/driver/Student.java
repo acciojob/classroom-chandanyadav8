@@ -10,6 +10,22 @@ public class Student {
 
     }
 
+    public double getAverageScore() {
+        return averageScore;
+    }
+
+    public void setAverageScore(double averageScore) {
+        this.averageScore = averageScore;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     public Student(String name, int age, double averageScore) {
         this.name = name;
         this.age = age;
