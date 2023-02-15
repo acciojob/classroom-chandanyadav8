@@ -5,69 +5,80 @@ import java.util.*;
 
 @Repository
 public class StudentRepository {
-    Map<String,Student>st=new HashMap<>();
-    Map<String,Teacher>tc=new HashMap<>();
-    Map<String, List<String>> pairDb = new HashMap<>();
-    public String addStudent(Student student)
-    {
-        st.put(student.getName(),student);
-        return "New student added successfully";
+    HashMap<String,Student> studentDB;
+    HashMap<String,Teacher> teacherDB;
+    HashMap<String,List<String>> teacherStudentPair;
+
+    public StudentRepository() {
+        this.studentDB = new HashMap<String,Student>();
+        this.teacherDB = new HashMap<String,Teacher>();
+        this.teacherStudentPair = new HashMap<String,List<String>>();
     }
-    public String addTeacher(Teacher teacher)
-    {
-        tc.put(teacher.getName(),teacher);
-        return "Teacher added succesfully";
+    public void addStudent(Student student){
+        studentDB.put(student.getName(),student);
     }
-    public String addStudentTeacherPair(String student,String teacher)
-    {
-        List<String> studentList = pairDb.getOrDefault(teacher,new ArrayList<>());
-        studentList.add(student);
-        pairDb.put(teacher,studentList);
-        return "pair added succesfully";
+
+    public void addTeacher(Teacher teacher){
+        teacherDB.put(teacher.getName(),teacher);
     }
-    public Student getStudentByName(String name)
-    {
-        if(!st.containsKey(name))
-            return null;
-        return st.get(name);
+
+    public void addStudentTeacherPair(String student,String teacher){
+        if(studentDB.containsKey(student) && teacherDB.containsKey(teacher)){
+            List<String> studentList = new ArrayList<>();
+            if(teacherStudentPair.containsKey(teacher))
+                studentList = teacherStudentPair.get(teacher);
+            studentList.add(student);
+            teacherStudentPair.put(teacher,studentList);
+        }
     }
-    public Teacher getTeacherByName(String name)
-    {
-        if(!tc.containsKey(name))
-            return null;
-        return tc.get(name);
+
+    public Student getStudentByName(String student){
+        return studentDB.get(student);
     }
+
+    public Teacher getTeacherByName(String teacher){
+        return teacherDB.get(teacher);
+    }
+
     public List<String> getStudentsByTeacherName(String teacher){
-        List<String> studentList = new ArrayList<String>();
-        if(pairDb.containsKey(teacher)) studentList = pairDb.get(teacher);
+        List<String> studentList= new ArrayList<>();
+        if(teacherStudentPair.containsKey(teacher)){
+            studentList = teacherStudentPair.get(teacher);
+        }
+
         return studentList;
     }
-    public List<String> getAllStudents(){
-        List<String>ans=new ArrayList<>();
-        for(String i:st.keySet())
-        {
 
-                ans.add(i);
-        }
-        return ans;
+    public List<String> getAllStudents(){
+        return new ArrayList<>(studentDB.keySet());
     }
-    public String deleteTeacherByName(String name)
-    {
-        List<String> studentList = pairDb.get(name);
-        for(String student : studentList){
-            if(st.containsKey(student)){
-                st.remove(student);
+
+    public void deleteTeacherByName (String teacher){
+        if(teacherStudentPair.containsKey(teacher)){
+            List<String> studentList = teacherStudentPair.get(teacher);
+            for(String student:studentList){
+                if(studentDB.containsKey(student)){
+                    studentDB.remove(student);
+                }
+            }
+            teacherStudentPair.remove(teacher);
+        }
+
+        if(teacherDB.containsKey(teacher)){
+            teacherDB.remove(teacher);
+        }
+    }
+
+    public void deleteAllTeachers() {
+        teacherDB = new HashMap<>();
+        for (String teacher : teacherStudentPair.keySet()) {
+            for (String student : teacherStudentPair.get(teacher)) {
+                if (studentDB.containsKey(student)) {
+                    studentDB.remove(student);
+                }
             }
         }
-        pairDb.remove(name);
-        return "deleted succesfully";
-    }
-    public String deleteAllTeachers()
-    {
-        tc.clear();
-        return "All teachers deleted successfully";
-    }
-}
+    }}
 
 
 

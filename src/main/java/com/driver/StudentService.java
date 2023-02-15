@@ -9,45 +9,44 @@ import java.util.Map;
 
 @Service
 public class StudentService {
+
     @Autowired
-    StudentRepository studentRepository;
-    public String addStudent(Student student)
-    {
+    StudentRepository studentRepo;
 
-        return studentRepository.addStudent(student);
+    public void addStudent(Student student){
+        studentRepo.addStudent(student);;
     }
-    public String addTeacher(Teacher teacher)
-    {
 
-        return studentRepository.addTeacher(teacher);
+    public void addTeacher(Teacher teacher){
+        studentRepo.addTeacher(teacher);;
     }
-    public String addStudentTeacherPair(String student,String teacher)
-    {
 
-        return studentRepository.addStudentTeacherPair(student,teacher);
+    public void addStudentTeacherPair(String student,String teacher){
+        studentRepo.addStudentTeacherPair(student, teacher);
     }
-    public Student getStudentByName(String name)
-    {
-        return studentRepository.getStudentByName(name);
-    }
-    public Teacher getTeacherByName(String name)
-    {
-        return studentRepository.getTeacherByName(name);
-    }
-    public List<String> getStudentsByTeacherName(String name)
-    {
-        return studentRepository.getStudentsByTeacherName(name);
 
+    public Student getStudentByName(String student){
+        return studentRepo.getStudentByName(student);
     }
+
+    public Teacher getTeacherByName(String teacher){
+        return studentRepo.getTeacherByName(teacher);
+    }
+
+    public List<String> getStudentsByTeacherName(String teacher){
+        return studentRepo.getStudentsByTeacherName(teacher);
+    }
+
     public List<String> getAllStudents(){
-        return studentRepository.getAllStudents();
+        return studentRepo.getAllStudents();
     }
-    public String deleteTeacherByName(String name)
-    {
-        return studentRepository.deleteTeacherByName(name);
+
+    public void deleteTeacherByName (String teacher){
+        studentRepo.deleteTeacherByName(teacher);
     }
-    public String deleteAllTeachers()
-    {
-        return studentRepository.deleteAllTeachers();
+
+    public void deleteAllTeachers(){
+        studentRepo.deleteAllTeachers();
     }
 }
+
